@@ -1,0 +1,34 @@
+// import app from './../src/App';
+
+// const http:Server = require('http').Server( app.express );
+// const io = require('socket.io-client');
+
+// import realTime from './../src/RealTime';
+// import { Server } from 'http';
+
+// let client:SocketIOClient.Socket;
+
+// beforeAll( async done => {
+//     http.listen( 3305 );
+//     realTime.startServer( http );
+//     client = await io( 'http://localhost:3305' );
+//     done();
+// } )
+
+// afterAll( done => {
+//     client.close();
+//     realTime.closeServer();
+//     http.close();
+//     done();
+// } )
+
+// describe('Socket Routes', () => {
+//     it('should read the same message sent', () => {
+//         const message:string = 'Hello :)';
+//         expect.assertions(1);
+//         client.on( 'echo', ( receivedMessage:string ) => {
+//             expect( receivedMessage ).toEqual( message );
+//         } )
+//         realTime.echo( message );
+//     });
+// });
