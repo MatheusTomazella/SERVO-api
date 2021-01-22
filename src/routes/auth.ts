@@ -10,7 +10,11 @@ middleware.use( ( request, response, next ) => {
         return;
     } 
     const token = request.query?.token || request.body?.token;
-    if ( token === process.env.TOKEN ) next( );
+    if ( token === process.env.TOKEN ) { 
+        delete request.query.token;
+        delete request.body.token;
+        next( );
+    }
     else response.status(401).json( errorFac( 'auth' ) );
 } )
 

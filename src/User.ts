@@ -1,8 +1,5 @@
-export type StoredUser = { 
-    id:number,
-    name:string,
-    email:string,
-}
+import { StoredUser } from "./types/User.type";
+
 interface User {
     data:StoredUser
 }

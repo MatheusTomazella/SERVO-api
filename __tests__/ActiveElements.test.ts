@@ -1,10 +1,13 @@
-import faker from 'faker'
-import Component, { ComponentType, StoredComponent } from '../src/components/Component';
+import Component from '../src/components/Component';
 import Light from '../src/components/Light';
 import typeClassMap from '../src/data/typeClassMap';
-import User, { StoredUser } from '../src/User';
+import { StoredComponent } from '../src/types/Component.type';
+import { StoredUser } from '../src/types/User.type';
+import User from '../src/User';
 
 import { activeComponents, activeUsers } from './../src/data/ActiveElements';
+import { generateFakeComponentAsDatabaseReturn } from './helper/component.factory';
+import { generateFakeUserAsDatabaseReturn } from './helper/user.factory';
 
 describe('Active Users', () => {
     let localState:Array<StoredUser> = [];
@@ -14,7 +17,7 @@ describe('Active Users', () => {
         done();
     } )
     it('should add a user', () => {
-        localState.push( generateFakeUser() )
+        localState.push( generateFakeUserAsDatabaseReturn() )
         activeUsers.add( localState[0] );
         expect( Object.keys( activeUsers.elements ).length ).toBe( 1 );
     });
@@ -28,7 +31,7 @@ describe('Active Users', () => {
     });
     it('should be able to add more than one user correctly', () => {
         for ( let i = 0; i < 10; i++ ) {
-            localState[i] = generateFakeUser( );
+            localState[i] = generateFakeUserAsDatabaseReturn( );
             activeUsers.add( localState[i] );
         }
         for ( let i = 0; i < 10; i++ ) {
@@ -49,14 +52,6 @@ describe('Active Users', () => {
     });
 });
 
-function generateFakeUser ( ):StoredUser {
-    return {
-        id: faker.random.number(),
-        name: faker.name.findName(),
-        email: faker.internet.email()
-    }
-}
-
 describe('Active Components', () => {
     let localState:Array<StoredComponent> = [];
 
@@ -66,7 +61,7 @@ describe('Active Components', () => {
     } )
 
     it('should add a component (component)', () => {
-        localState.push( generateFakeComponent( 'component' ) )
+        localState.push( generateFakeComponentAsDatabaseReturn( 'component' ) )
         activeComponents.add( localState[0] );
         expect( Object.keys( activeComponents.elements ).length ).toBe( 1 );
     });
@@ -79,7 +74,7 @@ describe('Active Components', () => {
         expect( activeComponents.elements ).toMatchObject( { } );
     });
     it('should add a component (light)', () => {
-        localState.push( generateFakeComponent( 'light' ) )
+        localState.push( generateFakeComponentAsDatabaseReturn( 'light' ) )
         activeComponents.add( localState[0] );
         expect( Object.keys( activeComponents.elements ).length ).toBe( 1 );
     });
@@ -93,7 +88,7 @@ describe('Active Components', () => {
     });
     it('should be able to add more than one component (both) correctly', () => {
         for ( let i = 0; i < 10; i++ ) {
-            localState[i] = generateFakeComponent( (i%2===0) ? 'light' : 'component' );
+            localState[i] = generateFakeComponentAsDatabaseReturn( (i%2===0) ? 'light' : 'component' );
             activeComponents.add( localState[i] );
         }
         for ( let i = 0; i < 10; i++ ) {
@@ -113,11 +108,3 @@ describe('Active Components', () => {
         expect( activeComponents.elements ).toMatchObject( { } );
     });
 });
-
-function generateFakeComponent ( type:ComponentType ):StoredComponent {
-    return {
-        id: faker.random.number(),
-        type: type,
-        userId: faker.random.number()
-    }
-}

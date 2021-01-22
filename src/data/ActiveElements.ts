@@ -1,20 +1,23 @@
-import Component, { StoredComponent } from '../components/Component';
+import Component from '../components/Component';
 import Light from '../components/Light';
-import User, { StoredUser } from '../User'
+import { StoredComponent } from '../types/Component.type';
+import { DatabaseIndex } from '../types/Database.type';
+import { StoredUser } from '../types/User.type';
+import User from '../User'
 import typeClassMap from './typeClassMap';
 
 interface ActiveElements {
-    elements:{ [index: number]: any }
+    elements:{ [index: string]: any }
 }
 class ActiveElements {
     constructor ( ) {
         this.elements = { }
         return this;
     }
-    remove ( elementId:number ) {
+    remove ( elementId:DatabaseIndex ) {
         delete this.elements[ elementId ];
     }
-    get ( elementId:number ) {
+    get ( elementId:DatabaseIndex ) {
         return this.elements[ elementId ];
     }
     clear ( ) {
@@ -23,7 +26,7 @@ class ActiveElements {
 }
 
 interface ActiveUsers {
-    elements: { [index: number]: User }
+    elements: { [index: string]: User }
 }
 class ActiveUsers extends ActiveElements {
     add ( data:StoredUser ):User {
@@ -35,7 +38,7 @@ class ActiveUsers extends ActiveElements {
 
 type AnyComponent = Component | Light | any;
 interface ActiveComponents {
-    elements: { [index: number]: AnyComponent }
+    elements: { [index: string]: AnyComponent }
 }
 class ActiveComponents extends ActiveElements {
     add ( data:StoredComponent ):AnyComponent {

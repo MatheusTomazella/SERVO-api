@@ -1,9 +1,7 @@
-import Component, { StoredComponent } from './Component'
+import { StoredComponent } from '../types/Component.type';
+import { StateUpdate } from '../types/Light.type';
+import Component from './Component'
 
-type StateUpdate = {
-    [index:string]: any,
-    isOn?:boolean
-}
 interface Light {
     state: {
         [index:string]: any,

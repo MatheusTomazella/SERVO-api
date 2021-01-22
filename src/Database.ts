@@ -1,9 +1,11 @@
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { FilterQuery, Mongoose } from 'mongoose';
+import { StoredComponent } from './types/Component.type';
+import { ComponentToInsert, MongoConnectionInfo, ServoDatabaseTable, UserToInsert } from './types/Database.type';
+import { StoredUser } from './types/User.type';
+import UserModel from './mongo/UserModel'
+import ComponentModel from './mongo/ComponentModel';
+import generateError, { ServoError } from './factories/error.factory';
 
-type MongoConnectionInfo = {
-    uri:string,
-    options?:mongoose.ConnectOptions
-}
 const mongoConnInfo:MongoConnectionInfo = {
     uri: process.env.MONGO_URI || '',
     options: {
@@ -15,17 +17,70 @@ const mongoConnInfo:MongoConnectionInfo = {
 interface Database {
     mongoose:Mongoose,
     connection:mongoose.Connection
+    connectionInfo:MongoConnectionInfo
+    models: {
+        User:mongoose.Model<any>,
+        Component:mongoose.Model<any>
+    }
 }
 class Database {
     constructor ( connInfo:MongoConnectionInfo ) {
+        this.connectionInfo = connInfo;
         this.mongoose = mongoose;
-        mongoose.connect( connInfo.uri )
+
+        this.models = {
+            User: UserModel,
+            Component: ComponentModel
+        }
+        
+        mongoose.connect( connInfo.uri, connInfo.options )
         this.connection = mongoose.connection;
-
         this.connection.on( 'error', console.error.bind( console, 'Connection Error: ' ) );
-        // this.connection.once( 'open', ( ) => { console.log( 'connected' ); } )
-
+        this.connection.once( 'open', ( ) => { 
+            // console.log( 'connected' );
+        } )
         return this;
+    }
+
+    fetch ( table:ServoDatabaseTable, query:FilterQuery<any>|undefined = {} ):Promise<any> {
+        return new Promise ( ( resolve, reject ) => {
+            this.models[table].find( query ).exec( ( error, result ) => {
+                if ( error ) reject( generateError( 'query', error ) );
+                resolve( ( query._id || query.email ) ? result[0] : result )
+            } )
+        } )
+    }
+    fetchUser ( query?:FilterQuery<any> ):Promise<StoredUser[] | StoredUser> {
+        return this.fetch( 'User', query );
+    }
+    fetchComponent ( query?:FilterQuery<any> ):Promise<StoredComponent[] | StoredComponent> {
+        return this.fetch( 'Component', query );
+    }
+
+    insert ( table:ServoDatabaseTable, element:ComponentToInsert | UserToInsert ):Promise<any> {
+        return new Promise ( ( resolve, reject ) => {
+            this.models[table].create( element )
+            .then( instance => {
+                resolve( this.fetch( table, { _id: instance._id } ) );
+            } )
+            .catch( ( error ) => {
+                if ( error ) reject( generateError( 'query', error ) );
+            } )
+        } )
+    }
+    insertUser ( user:UserToInsert ):Promise<StoredUser> {
+        return this.insert( 'User', user );
+    }
+    insertComponent ( component:ComponentToInsert ):Promise<StoredComponent> {
+        return this.insert( 'Component', component );
+    }
+
+    clearDatabaseMonkaW ( callback?:Function ) {
+        if ( process.env.NODE_ENV !== 'TEST' ) return 'Ta loco mano, wtf';
+        Object.values(this.models).forEach( model => {
+            model.deleteMany( {} );
+        } )
+        if ( callback ) callback();
     }
 }
 
