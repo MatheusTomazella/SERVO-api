@@ -31,7 +31,7 @@ interface ActiveUsers {
 class ActiveUsers extends ActiveElements {
     add ( data:StoredUser ):User {
         const newUser = new User( data );
-        this.elements[data.id] = newUser;
+        this.elements[data._id] = newUser;
         return newUser;
     }
 }
@@ -43,7 +43,7 @@ interface ActiveComponents {
 class ActiveComponents extends ActiveElements {
     add ( data:StoredComponent ):AnyComponent {
         const newComponent = new typeClassMap[data.type](data);
-        this.elements[ data.id ] = newComponent;
+        this.elements[ data._id ] = newComponent;
         return newComponent;
     }
 }

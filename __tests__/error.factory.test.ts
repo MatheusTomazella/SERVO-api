@@ -1,3 +1,4 @@
+require( 'dotenv' ).config( )
 import errorFac, { errorCodes } from './../src/factories/error.factory';
 
 describe('Error Factory', () => {

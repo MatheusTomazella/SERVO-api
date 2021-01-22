@@ -1,3 +1,4 @@
+require( 'dotenv' ).config( )
 import Component from '../src/components/Component';
 import Light from '../src/components/Light';
 import typeClassMap from '../src/data/typeClassMap';
@@ -22,10 +23,10 @@ describe('Active Users', () => {
         expect( Object.keys( activeUsers.elements ).length ).toBe( 1 );
     });
     it('should return the same user stored', () => {
-        expect( activeUsers.get(localState[0].id) ).toMatchObject( new User( localState[0] ) );
+        expect( activeUsers.get(localState[0]._id) ).toMatchObject( new User( localState[0] ) );
     });
     it('should delete the user and be empty', () => {
-        activeUsers.remove( localState[0].id );
+        activeUsers.remove( localState[0]._id );
         localState = [ ];
         expect( activeUsers.elements ).toMatchObject( { } );
     });
@@ -35,15 +36,15 @@ describe('Active Users', () => {
             activeUsers.add( localState[i] );
         }
         for ( let i = 0; i < 10; i++ ) {
-            expect( activeUsers.get( localState[i].id ) ).toMatchObject( new User( localState[i] ) );
+            expect( activeUsers.get( localState[i]._id ) ).toMatchObject( new User( localState[i] ) );
         }
     });
     it('should be able to remove one of the users', () => {
         const number = Math.floor( Math.random() * 10 );
-        activeUsers.remove( localState[number].id );
+        activeUsers.remove( localState[number]._id );
         localState.splice( number, 1 );
         localState.forEach ( user => {
-            expect( activeUsers.get( user.id ) ).toMatchObject( new User( user ) );
+            expect( activeUsers.get( user._id ) ).toMatchObject( new User( user ) );
         } )
     });
     it('should clear the data', () => {
@@ -66,10 +67,10 @@ describe('Active Components', () => {
         expect( Object.keys( activeComponents.elements ).length ).toBe( 1 );
     });
     it('should return the same component (component) stored', () => {
-        expect( activeComponents.get(localState[0].id) ).toMatchObject( new Component( localState[0] ) );
+        expect( activeComponents.get(localState[0]._id) ).toMatchObject( new Component( localState[0] ) );
     });
     it('should delete the component (component) and be empty', () => {
-        activeComponents.remove( localState[0].id );
+        activeComponents.remove( localState[0]._id );
         localState = [ ];
         expect( activeComponents.elements ).toMatchObject( { } );
     });
@@ -79,10 +80,10 @@ describe('Active Components', () => {
         expect( Object.keys( activeComponents.elements ).length ).toBe( 1 );
     });
     it('should return the same component (light) stored', () => {
-        expect( activeComponents.get(localState[0].id) ).toMatchObject( new Light( localState[0] ) );
+        expect( activeComponents.get(localState[0]._id) ).toMatchObject( new Light( localState[0] ) );
     });
     it('should delete the component (light) and be empty', () => {
-        activeComponents.remove( localState[0].id );
+        activeComponents.remove( localState[0]._id );
         localState = [ ];
         expect( activeComponents.elements ).toMatchObject( { } );
     });
@@ -92,15 +93,15 @@ describe('Active Components', () => {
             activeComponents.add( localState[i] );
         }
         for ( let i = 0; i < 10; i++ ) {
-            expect( activeComponents.get( localState[i].id ) ).toMatchObject( new ((i%2===0)?Light:Component)( localState[i] ) );
+            expect( activeComponents.get( localState[i]._id ) ).toMatchObject( new ((i%2===0)?Light:Component)( localState[i] ) );
         }
     });
     it('should be able to remove one of the components', () => {
         const number = Math.floor( Math.random() * 10 );
-        activeComponents.remove( localState[number].id );
+        activeComponents.remove( localState[number]._id );
         localState.splice( number, 1 );
         localState.forEach ( component => {
-            expect( activeComponents.get( component.id ) ).toMatchObject( new typeClassMap[component.type]( component ) );
+            expect( activeComponents.get( component._id ) ).toMatchObject( new typeClassMap[component.type]( component ) );
         } )
     });
     it('should clear the data', () => {

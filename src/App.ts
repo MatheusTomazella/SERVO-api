@@ -1,12 +1,12 @@
-require( 'dotenv' ).config( {
-    path: ( process.env.NODE_ENV === 'TEST' ) ? './.env.test' : './.env'
-} );
+require( 'dotenv' ).config( );
 import express  from 'express';
 import bp       from 'body-parser'
 import CORS     from 'cors';
 
-import middleware from './routes/auth';
 import router     from './routes/router';
+import login      from './routes/login';
+import debug      from './routes/debug';
+import middleware from './routes/auth';
 
 interface App {
     express: Express.Application
@@ -21,6 +21,8 @@ class App implements App {
 
         app.use( middleware );
         app.use( router );
+        app.use( debug );
+        app.use( login );
 
         this.express = app;
         return this;

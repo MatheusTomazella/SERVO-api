@@ -50,18 +50,22 @@ class Database {
             } )
         } )
     }
-    fetchUser ( query?:FilterQuery<any> ):Promise<StoredUser[] | StoredUser> {
+    fetchUser ( query?:FilterQuery<any> ):Promise<any> {
         return this.fetch( 'User', query );
     }
-    fetchComponent ( query?:FilterQuery<any> ):Promise<StoredComponent[] | StoredComponent> {
+    fetchComponent ( query?:FilterQuery<any> ):Promise<any> {
         return this.fetch( 'Component', query );
     }
 
     insert ( table:ServoDatabaseTable, element:ComponentToInsert | UserToInsert ):Promise<any> {
         return new Promise ( ( resolve, reject ) => {
+            //element._id = new mongoose.Types.ObjectId().toHexString();
             this.models[table].create( element )
             .then( instance => {
-                resolve( this.fetch( table, { _id: instance._id } ) );
+                resolve( this.fetch( table, { _id: instance._id } )
+                .catch( error => {
+                    reject( generateError( 'query', error ) );
+                } ) );
             } )
             .catch( ( error ) => {
                 if ( error ) reject( generateError( 'query', error ) );

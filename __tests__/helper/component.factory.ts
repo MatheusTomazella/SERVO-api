@@ -1,13 +1,14 @@
 import faker from "faker";
+import mongoose from 'mongoose'
 import { ComponentType, StoredComponent } from "../../src/types/Component.type";
 import { ComponentToInsert } from "../../src/types/Database.type";
 
 export function generateFakeComponentAsDatabaseReturn ( type:ComponentType ):StoredComponent {
     return {
-        id: faker.random.alphaNumeric(15),
+        _id: new mongoose.Types.ObjectId().toHexString(),
         name: faker.name.title(),
         type: type,
-        userId: faker.random.alphaNumeric(15)
+        userId: new mongoose.Types.ObjectId().toHexString()
     }
 }
 
@@ -15,7 +16,7 @@ export function generateFakeComponentToInsert ( type:ComponentType ):ComponentTo
     return {
         name: faker.name.title(),
         type,
-        userId: faker.random.alphaNumeric(15),
+        userId: new mongoose.Types.ObjectId().toHexString(),
         password: faker.internet.password()
     }
 }
