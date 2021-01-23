@@ -29,7 +29,8 @@ interface ActiveUsers {
     elements: { [index: string]: User }
 }
 class ActiveUsers extends ActiveElements {
-    add ( data:StoredUser ):User {
+    add ( data:StoredUser | User ):User {
+        if ( data instanceof User ) return this.elements[data.data._id] = data;
         const newUser = new User( data );
         this.elements[data._id] = newUser;
         return newUser;
