@@ -6,7 +6,7 @@ import JWT from '../JWT';
 const middleware = express.Router( );
 
 middleware.use( ( request, response, next ) => {
-    if ( [ '/ping', '/', '/login', '/loginComponent', '/randomUser', '/randomComponent' ].indexOf( request.path ) !== -1 ) {
+    if ( noTokenNeeded( request.path ) ) {
         next();
         return;
     } 
@@ -24,3 +24,11 @@ middleware.get( '/authTest', ( request, response ) => {
 } )
 
 export default middleware;
+
+
+function noTokenNeeded ( path:string ) {
+    if ( [ '/ping', '/', '/login', '/debug/random/component', '/debug/random/user' ]
+        .indexOf( path ) !== -1 ) return true;
+    if ( path.startsWith( '/login/component/' ) ) return true;
+    return false;
+}

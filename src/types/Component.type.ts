@@ -6,5 +6,6 @@ export type StoredComponent = {
     _id:DatabaseIndex,
     name:string,
     type:ComponentType,
-    userId:DatabaseIndex
+    userId:DatabaseIndex,
+    password?:string
 }

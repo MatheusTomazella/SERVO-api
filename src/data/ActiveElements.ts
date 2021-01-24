@@ -42,7 +42,8 @@ interface ActiveComponents {
     elements: { [index: string]: AnyComponent }
 }
 class ActiveComponents extends ActiveElements {
-    add ( data:StoredComponent ):AnyComponent {
+    add ( data:StoredComponent | AnyComponent ):AnyComponent {
+        if ( data instanceof Component ) return this.elements[data.data._id] = data;
         const newComponent = new typeClassMap[data.type](data);
         this.elements[ data._id ] = newComponent;
         return newComponent;

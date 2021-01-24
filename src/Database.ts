@@ -1,6 +1,6 @@
 import mongoose, { FilterQuery, Mongoose } from 'mongoose';
 import { StoredComponent } from './types/Component.type';
-import { ComponentToInsert, MongoConnectionInfo, ServoDatabaseTable, UserToInsert } from './types/Database.type';
+import { ComponentQuery, ComponentToInsert, MongoConnectionInfo, ServoDatabaseTable, UserQuery, UserToInsert } from './types/Database.type';
 import { StoredUser } from './types/User.type';
 import UserModel from './mongo/UserModel'
 import ComponentModel from './mongo/ComponentModel';
@@ -44,22 +44,22 @@ class Database {
 
     fetch ( table:ServoDatabaseTable, query:FilterQuery<any>|undefined = {} ):Promise<any> {
         return new Promise ( ( resolve, reject ) => {
-            this.models[table].find( query ).exec( ( error, result ) => {
+            this.models[table].find( query ).lean().exec( ( error, result ) => {
                 if ( error ) reject( generateError( 'query', error ) );
+                result.forEach( element => { element.password = undefined } );
                 resolve( ( query._id || query.email ) ? result[0] : result )
             } )
         } )
     }
-    fetchUser ( query?:FilterQuery<any> ):Promise<any> {
+    fetchUser ( query?:UserQuery ):Promise<any> {
         return this.fetch( 'User', query );
     }
-    fetchComponent ( query?:FilterQuery<any> ):Promise<any> {
+    fetchComponent ( query?:ComponentQuery ):Promise<any> {
         return this.fetch( 'Component', query );
     }
 
     insert ( table:ServoDatabaseTable, element:ComponentToInsert | UserToInsert ):Promise<any> {
         return new Promise ( ( resolve, reject ) => {
-            //element._id = new mongoose.Types.ObjectId().toHexString();
             this.models[table].create( element )
             .then( instance => {
                 resolve( this.fetch( table, { _id: instance._id } )

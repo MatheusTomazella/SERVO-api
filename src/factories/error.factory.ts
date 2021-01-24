@@ -5,7 +5,7 @@ export const errorCodes:ErrorCodes = {
     query: { code: 'QUERY_ERROR', defaultInfo: "There was an error while processing the query." }
 }
 
-type ErrorType = 'unknown' | 'auth' | 'query';
+export type ErrorType = 'unknown' | 'auth' | 'query';
 export type ServoError = {
     error: {
         code:string,

@@ -21,8 +21,8 @@ class App implements App {
 
         app.use( middleware );
         app.use( router );
-        app.use( debug );
-        app.use( login );
+        app.use( '/debug', debug );
+        app.use( '/login', login );
 
         this.express = app;
         return this;

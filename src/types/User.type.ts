@@ -8,4 +8,8 @@ export type StoredUser = {
     _id:DatabaseIndex,
     name: UserName,
     email:string,
+    password?:string
+}
+export type UserLoginInfo = {
+    email:string
 }

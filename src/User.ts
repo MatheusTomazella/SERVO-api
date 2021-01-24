@@ -1,23 +1,20 @@
-import { DatabaseIndex } from "./types/Database.type";
-import { StoredUser, UserName } from "./types/User.type";
+import { StoredUser, UserLoginInfo } from "./types/User.type";
 import database from './Database'
 
 interface User {
-    data: {
-        _id:DatabaseIndex,
-        name?:UserName,
-        email:string,
-    }
+    email:string,
+    data:StoredUser
 }
 class User {
-    constructor ( data:StoredUser ) {
+    constructor ( data:any ) {
+        this.email = data.email;
         this.data = data;
         return this;
     }
-    async fetchFromDatabase ( password:string ) {
-        return this.data = await database.fetchUser( { email: this.data.email, password: password } )
+    async fetchFromDatabase ( password:string ):Promise<StoredUser> {
+        return this.data = await database.fetchUser( { email: this.email, password: password } )
         .catch( error => {
-            return error;
+            throw error;
         } )
     }
 }
