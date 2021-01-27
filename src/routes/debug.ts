@@ -29,4 +29,9 @@ router.get( '/random/component', async ( request, response ) => {
     .catch( (error:ServoError) => { response.status(500).json( error ) } );
 } )
 
+router.get( '/clearDatabaseMonkaW', async ( request, response ) => {
+    database.clearDatabaseMonkaW();
+    response.end()
+} )
+
 export default router;

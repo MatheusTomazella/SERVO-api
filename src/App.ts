@@ -17,7 +17,7 @@ class App implements App {
 
         app.use( CORS( ) );
         app.use( bp.json( ) );
-        app.use( bp.urlencoded( { extended: false } ) )
+        app.use( bp.urlencoded( { extended: false } ) );
 
         app.use( middleware );
         app.use( router );

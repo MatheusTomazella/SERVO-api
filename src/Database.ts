@@ -46,7 +46,10 @@ class Database {
         return new Promise ( ( resolve, reject ) => {
             this.models[table].find( query ).lean().exec( ( error, result ) => {
                 if ( error ) reject( generateError( 'query', error ) );
-                result.forEach( element => { element.password = undefined } );
+                result.forEach( element => { 
+                    element.password = undefined; 
+                    if ( element.userId?.toHexString ) element.userId = element.userId.toHexString(); 
+                } );
                 resolve( ( query._id || query.email ) ? result[0] : result )
             } )
         } )
@@ -73,18 +76,23 @@ class Database {
         } )
     }
     insertUser ( user:UserToInsert ):Promise<StoredUser> {
-        return this.insert( 'User', user );
+        return this.insert( 'User', user as UserToInsert );
     }
     insertComponent ( component:ComponentToInsert ):Promise<StoredComponent> {
-        return this.insert( 'Component', component );
+        return this.insert( 'Component', component as ComponentToInsert );
     }
 
-    clearDatabaseMonkaW ( callback?:Function ) {
-        if ( process.env.NODE_ENV !== 'TEST' ) return 'Ta loco mano, wtf';
+    
+    clearDatabaseMonkaW ( ) {
+        //if ( process.env.NODE_ENV?.trim() !== 'TEST' ) return 'Ta loco meu, wtf'
         Object.values(this.models).forEach( model => {
-            model.deleteMany( {} );
+            model.deleteMany( {} ).exec( ).then( result => {
+                return true;
+            } )
+            .catch( (error) => {
+                throw error
+            } )
         } )
-        if ( callback ) callback();
     }
 }
 

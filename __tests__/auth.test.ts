@@ -1,4 +1,5 @@
-require( 'dotenv' ).config( { path: './env.test' } )
+require( 'dotenv' ).config( { path: './.env.test' } )
+import database from './../src/Database'
 import request from 'supertest';
 
 import app from '../src/App';
@@ -78,3 +79,7 @@ describe('Authentication middleware (component)', () => {
         expect( response.status ).toBe( 200 );
     });
 })
+
+afterAll( () => {
+    database.clearDatabaseMonkaW();
+} )

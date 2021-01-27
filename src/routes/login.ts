@@ -5,6 +5,7 @@ import JWT from '../JWT';
 import User from '../User';
 import generateError, { ErrorType, ServoError } from './../factories/error.factory';
 import errorFac from './../factories/error.factory'
+import respondError, { ifUndefinedRespondError, ifTrueRespondError } from '../token/respondError';
 const loginRoutes = express.Router();
 
 loginRoutes.post( '/', async ( request, response ) => {
@@ -57,23 +58,3 @@ loginRoutes.post( '/component/:type?/:id?', async ( request, response ) => {
 } )
 
 export default loginRoutes;
-
-
-function respondError ( error:{status:number,type?:ErrorType,message:any}, response:Response ) {
-    if ( error.type ) error.message = generateError( error.type, error.message );
-    response.status(error.status).json( error.message );
-}
-function ifUndefinedRespondError ( value:any, error:{status:number,type:ErrorType,message:any}, response:Response ) {
-    if ( !value ) {
-        respondError( error, response );
-        return true;
-    }
-    return false;
-}
-function ifTrueRespondError ( value:any, error:{status:number,type:ErrorType,message:any}, response:Response ) {
-    if ( value ) {
-        respondError( error, response );
-        return true;
-    }
-    return false;
-}

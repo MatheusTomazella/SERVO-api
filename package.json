@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.ts",
     "start-dev": "nodemon server.ts",
-    "test": "set NODE_ENV=TEST && jest --clearCache && node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "set NODE_ENV=TEST&& jest --clearCache && node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",

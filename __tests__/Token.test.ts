@@ -1,4 +1,4 @@
-require( 'dotenv' ).config( )
+require( 'dotenv' ).config();
 import JWT from './../src/JWT';
 import jwtModule from 'jsonwebtoken'
 import { generateFakeUserAsDatabaseReturn } from './helper/user.factory';

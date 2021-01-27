@@ -11,7 +11,7 @@ const ComponentSchema = new mongoose.Schema( {
     },
     userId: {
         type: mongoose.Types.ObjectId,
-        //ref: 'User',
+        ref: 'User',
     },
     password: {
         type: String,

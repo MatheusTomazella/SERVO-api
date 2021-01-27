@@ -1,4 +1,4 @@
-require( 'dotenv' ).config( )
+require( 'dotenv' ).config( { path: './.env.test' } )
 import Component from '../src/components/Component';
 import Light from '../src/components/Light';
 import typeClassMap from '../src/data/typeClassMap';
